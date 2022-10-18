@@ -39,9 +39,8 @@ export function updateApp(data) {
 
 export function deleteVehiclds(ids) {
   return request({
-    url: '/app/batch',
-    method: 'delete',
-    data: ids
+    url: '/app/batch/' + ids,
+    method: 'delete'
   })
 }
 

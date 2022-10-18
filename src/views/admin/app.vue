@@ -25,6 +25,7 @@
               range-separator="至"
               start-placeholder="开始日期"
               end-placeholder="结束日期"
+              @change="handleFind"
             />
           </div>
         </el-col>
@@ -36,7 +37,7 @@
             </el-button>
             <el-button class="filter-item" size="small" type="primary" icon="el-icon-plus" @click="handleAdd">添加
             </el-button>
-            <el-button type="primary" :disabled="this.sels.length === 0" @click="batchDelect">批量删除</el-button>
+            <el-button type="primary" size="small" icon="el-icon-delete" :disabled="sels.length === 0" @click="batchDelete">批量删除</el-button>
           </div>
         </el-col>
       </el-row>
@@ -211,23 +212,22 @@ export default {
     },
     handleSelectionChange(sels) {
       this.sels = sels
-      console.log(sels)
     },
-    batchDelect() {
+    batchDelete() {
       // 删除前的提示
       this.$confirm('确认删除记录吗?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        const ids = this.sels.map((item) => item.id)
-        ids.join(',')
-        deleteVehiclds({ ids: ids }).then((res) => {
-          if (res.code === '10000') {
+        const ids = this.sels.map((item) => item.appId)
+        deleteVehiclds(ids).then((res) => {
+          if (res.data.code === 200) {
             this.$message({
               message: '删除成功',
               type: 'success'
             })
+            this.appList()
           }
         })
       }).catch(() => {
@@ -244,6 +244,10 @@ export default {
       this.query = {
         appName: ''
       }
+      this.appList()
+    },
+    handleCurrentChange: function(val) {
+      this.currentPage = val
       this.appList()
     },
     // 添加应用
@@ -310,7 +314,7 @@ export default {
                   message: '操作成功'
                 })
                 this.dialogFormVisible = false
-                this.roleList()
+                this.appList()
               } else {
                 this.$message({
                   type: 'error',
@@ -326,7 +330,7 @@ export default {
                   message: '操作成功'
                 })
                 this.dialogFormVisible = false
-                this.roleList()
+                this.appList()
               } else {
                 this.$message({
                   type: 'error',
