@@ -37,12 +37,25 @@
             </el-button>
             <el-button class="filter-item" size="small" type="primary" icon="el-icon-plus" @click="handleAdd">添加
             </el-button>
-            <el-button type="primary" size="small" icon="el-icon-delete" :disabled="sels.length === 0" @click="batchDelete">批量删除</el-button>
+            <el-button
+              type="primary"
+              size="small"
+              icon="el-icon-delete"
+              :disabled="sels.length === 0"
+              @click="batchDelete"
+            >批量删除
+            </el-button>
           </div>
         </el-col>
       </el-row>
     </div>
-    <el-table v-loading="loading" :data="tableData" border style="width: 100%" @selection-change="handleSelectionChange">
+    <el-table
+      v-loading="loading"
+      :data="tableData"
+      border
+      style="width: 100%"
+      @selection-change="handleSelectionChange"
+    >
       <el-table-column type="selection" />
       <el-table-column label="序号" width="60" align="center">
         <template slot-scope="scope">
@@ -112,7 +125,7 @@
 
       </el-form>
       <div slot="footer" class="dialog-footer">
-        <el-button size="small" @click="dialogFormVisible = false">取 消</el-button>
+        <el-button size="small" @click="handleCancel">取 消</el-button>
         <el-button size="small" type="primary" @click="submitForm">确 定</el-button>
       </div>
     </el-dialog>
@@ -244,6 +257,8 @@ export default {
       this.query = {
         appName: ''
       }
+      this.sels = []
+      this.time = []
       this.appList()
     },
     handleCurrentChange: function(val) {
@@ -302,6 +317,11 @@ export default {
             message: '已取消删除'
           })
         })
+    },
+    // 取消操作
+    handleCancel: function() {
+      this.dialogFormVisible = false
+      this.appList()
     },
     submitForm: function() {
       this.$refs['form'].validate((valid) => {
